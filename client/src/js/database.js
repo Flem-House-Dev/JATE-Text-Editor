@@ -1,4 +1,5 @@
 import { openDB } from 'idb';
+import { v4 as uuidv4 } from 'uuid';
 
 const initdb = async () =>
   openDB('jate', 1, {
@@ -12,30 +13,26 @@ const initdb = async () =>
     },
   });
 
-// TODO: Add logic to a method that accepts some content and adds it to the database
 export const putDb = async (content) => {
-  // // console.error('putDb not implemented');
-  // console.log('PUT to the database');
-  // const db = await openDB('jate', 1);
-  // const tx = db.transaction('jate', 'readwrite');
-  // const store = tx.objectStore('jate');
-  // request = store.put(content);
-  // const result = await request;
-  // console.log('Data saved to database', result);
+  const id = uuidv4(); // Generate a unique key
+  console.log('PUT to the database');
+  const db = await openDB('jate', 1);
+  const tx = db.transaction('jate', 'readwrite');
+  const store = tx.objectStore('jate');
+  const request = store.put({ id, content }); // Store the content with the generated key
+  const result = await request;
+  console.log('Data saved to database',result, content); // Log only the content
+  await tx.done;
 }
 
-// TODO: Add logic for a method that gets all the content from the database
 export const getDb = async () => {
-  // // console.error('getDb not implemented');
-  // console.log('GET from the database');
-  // const db = await openDB('jate', 1);
-  // const tx = db.transaction('jate', 'readonly');
-  // const store = tx.objectStore('jate');
-  // const request = store.getAll();
-  // const result = await request;
-  // console.log('🚀 - data retrieved from the database', result);
-  // return result;
-} 
-  
+  console.log('GET from the database');
+  const db = await openDB('jate', 1);
+  const tx = db.transaction('jate', 'readonly');
+  const store = tx.objectStore('jate');
+  const request = store.getAll();
+  const result = await request;
+  console.log('🚀 - data retrieved from the database', result);
+}
 
 initdb();
